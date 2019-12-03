@@ -2,4 +2,4 @@ module github.com/niktheblak/bcryptcli
 
 go 1.12
 
-require golang.org/x/crypto v0.0.0-20190513172903-22d7a77e9e5f
+require golang.org/x/crypto v0.0.0-20191202143827-86a70503ff7e
