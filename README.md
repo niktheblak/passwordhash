@@ -1,2 +1,2 @@
-# bcryptcli
-CLI for bcrypt
+# cryptcli
+CLI for bcrypt and scrypt
