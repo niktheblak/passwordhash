@@ -1,4 +1,4 @@
-module github.com/niktheblak/bcryptcli
+module github.com/niktheblak/cryptcli
 
 go 1.13
 
