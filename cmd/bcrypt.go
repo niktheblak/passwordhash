@@ -10,7 +10,7 @@ import (
 )
 
 var bcryptCmd = &cobra.Command{
-	Use:   "bcrypt",
+	Use:   "bcrypt [input data]",
 	Short: "Prints bcrypt hash of the input data",
 	Long:  `Prints bcrypt hash of the input data provided as the command line argument or STDIN if no command line arguments are specified.`,
 	Args:  cobra.MaximumNArgs(1),

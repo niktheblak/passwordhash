@@ -10,7 +10,7 @@ import (
 )
 
 var scryptCmd = &cobra.Command{
-	Use:   "scrypt",
+	Use:   "scrypt [input data]",
 	Short: "Prints scrypt hash of the input data",
 	Long:  `Prints scrypt hash with a random salt prefix of the input data provided as the command line argument or STDIN if no command line arguments are specified.`,
 	Args:  cobra.MaximumNArgs(1),
