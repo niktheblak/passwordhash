@@ -10,6 +10,8 @@ import (
 	stdscrypt "golang.org/x/crypto/scrypt"
 )
 
+const HashPrefix = "$1$"
+
 const (
 	defaultN      = 32768
 	defaultR      = 8
@@ -19,13 +21,19 @@ const (
 )
 
 var (
-	ErrHashTooShort              = errors.New("hashedSecret too short to be a scrypted password")
-	ErrMismatchedHashAndPassword = errors.New("hashedPassword is not the hash of the given password")
+	ErrHashTooShort              = errors.New("hashed password is too short")
+	ErrMismatchedHashAndPassword = errors.New("hashed password does not match")
+	ErrInvalidHashPrefix         = errors.New("invalid hash prefix")
 )
 
 var Encoding = base64.RawURLEncoding
 
 func DecodeSaltAndHash(encodedHash []byte) (salt []byte, hash []byte, err error) {
+	if !bytes.HasPrefix(encodedHash, []byte(HashPrefix)) {
+		err = ErrInvalidHashPrefix
+		return
+	}
+	encodedHash = encodedHash[len(HashPrefix):]
 	decoded := make([]byte, Encoding.DecodedLen(len(encodedHash)))
 	n, err := Encoding.Decode(decoded, hash)
 	if err != nil {
@@ -81,6 +89,6 @@ func GenerateFromPassword(password []byte) (encodedHash string, err error) {
 	enc.Write(salt)
 	enc.Write(hash)
 	enc.Close()
-	encodedHash = buf.String()
+	encodedHash = HashPrefix + buf.String()
 	return
 }
