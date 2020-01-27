@@ -10,7 +10,7 @@ import (
 	stdscrypt "golang.org/x/crypto/scrypt"
 )
 
-const HashPrefix = "$1$"
+const HashPrefix = "$1s"
 
 const (
 	defaultN      = 32768
