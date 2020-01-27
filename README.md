@@ -1,2 +1,2 @@
-# cryptcli
-CLI for bcrypt and scrypt
+# passwordhash
+CLI for creating password hashes with bcrypt and scrypt

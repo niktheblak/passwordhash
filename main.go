@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/niktheblak/cryptcli/cmd"
+	"github.com/niktheblak/passwordhash/cmd"
 )
 
 func main() {

@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/niktheblak/cryptcli/pkg/scrypt"
+	"github.com/niktheblak/passwordhash/pkg/scrypt"
 	"github.com/spf13/cobra"
 )
 

@@ -5,8 +5,8 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "cryptcli",
-	Short: "cryptcli is a command line interface for various hashing functions",
+	Use:   "passwordhash",
+	Short: "passwordhash is a command line interface to create hashes of passwords",
 }
 
 func Execute() error {
