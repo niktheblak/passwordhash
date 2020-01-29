@@ -27,7 +27,7 @@ var scryptCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(hash)
+		fmt.Println(string(hash))
 	},
 }
 

@@ -10,8 +10,6 @@ import (
 	stdscrypt "golang.org/x/crypto/scrypt"
 )
 
-const HashPrefix = "$1s"
-
 const (
 	defaultN      = 32768
 	defaultR      = 8
@@ -26,16 +24,19 @@ var (
 	ErrInvalidHashPrefix         = errors.New("invalid hash prefix")
 )
 
-var Encoding = base64.RawURLEncoding
+var (
+	Encoding   = base64.RawURLEncoding
+	HashPrefix = []byte{'$', '1', 's'}
+)
 
 func DecodeSaltAndHash(encodedHash []byte) (salt []byte, hash []byte, err error) {
-	if !bytes.HasPrefix(encodedHash, []byte(HashPrefix)) {
+	if !bytes.HasPrefix(encodedHash, HashPrefix) {
 		err = ErrInvalidHashPrefix
 		return
 	}
 	encodedHash = encodedHash[len(HashPrefix):]
 	decoded := make([]byte, Encoding.DecodedLen(len(encodedHash)))
-	n, err := Encoding.Decode(decoded, hash)
+	n, err := Encoding.Decode(decoded, encodedHash)
 	if err != nil {
 		return
 	}
@@ -50,7 +51,7 @@ func DecodeSaltAndHash(encodedHash []byte) (salt []byte, hash []byte, err error)
 }
 
 func CompareHashAndPassword(hashedPassword, password []byte) error {
-	salt, key, err := DecodeSaltAndHash(hashedPassword)
+	salt, hash, err := DecodeSaltAndHash(hashedPassword)
 	if err != nil {
 		return err
 	}
@@ -58,7 +59,7 @@ func CompareHashAndPassword(hashedPassword, password []byte) error {
 	if err != nil {
 		return err
 	}
-	res := subtle.ConstantTimeCompare(key, expected)
+	res := subtle.ConstantTimeCompare(hash, expected)
 	if res == 1 {
 		return nil
 	}
@@ -79,7 +80,7 @@ func Hash(password []byte) (salt []byte, hash []byte, err error) {
 	return
 }
 
-func GenerateFromPassword(password []byte) (encodedHash string, err error) {
+func GenerateFromPassword(password []byte) (encodedHash []byte, err error) {
 	var buf bytes.Buffer
 	enc := base64.NewEncoder(Encoding, &buf)
 	salt, hash, err := Hash(password)
@@ -89,6 +90,9 @@ func GenerateFromPassword(password []byte) (encodedHash string, err error) {
 	enc.Write(salt)
 	enc.Write(hash)
 	enc.Close()
-	encodedHash = HashPrefix + buf.String()
+	var encoded bytes.Buffer
+	encoded.Write(HashPrefix)
+	buf.WriteTo(&encoded)
+	encodedHash = encoded.Bytes()
 	return
 }
