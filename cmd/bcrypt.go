@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/niktheblak/passwordhash/pkg/bcrypt"
 	"github.com/spf13/cobra"
-	"golang.org/x/crypto/bcrypt"
 )
 
 var bcryptCmd = &cobra.Command{
@@ -23,7 +23,7 @@ var bcryptCmd = &cobra.Command{
 		} else {
 			password = os.Args[0]
 		}
-		hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+		hash, err := bcrypt.GenerateFromPassword([]byte(password))
 		if err != nil {
 			log.Fatal(err)
 		}
