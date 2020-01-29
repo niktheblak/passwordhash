@@ -30,6 +30,3 @@ var scryptCmd = &cobra.Command{
 		fmt.Println(string(hash))
 	},
 }
-
-func init() {
-}
