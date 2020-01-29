@@ -11,11 +11,11 @@ import (
 )
 
 const (
-	defaultN      = 32768
-	defaultR      = 8
-	defaultP      = 1
-	defaultKeyLen = 32
-	saltLen       = 8
+	DefaultN      = 32768
+	DefaultR      = 8
+	DefaultP      = 1
+	DefaultKeyLen = 32
+	SaltLen       = 8
 )
 
 var (
@@ -41,12 +41,12 @@ func DecodeSaltAndHash(encodedHash []byte) (salt []byte, hash []byte, err error)
 		return
 	}
 	decoded = decoded[:n]
-	if len(decoded) < saltLen {
+	if len(decoded) < SaltLen {
 		err = ErrHashTooShort
 		return
 	}
-	salt = decoded[:saltLen]
-	hash = decoded[saltLen:]
+	salt = decoded[:SaltLen]
+	hash = decoded[SaltLen:]
 	return
 }
 
@@ -67,11 +67,11 @@ func CompareHashAndPassword(hashedPassword, password []byte) error {
 }
 
 func HashWithSalt(salt, password []byte) ([]byte, error) {
-	return stdscrypt.Key(password, salt, defaultN, defaultR, defaultP, defaultKeyLen)
+	return stdscrypt.Key(password, salt, DefaultN, DefaultR, DefaultP, DefaultKeyLen)
 }
 
 func Hash(password []byte) (salt []byte, hash []byte, err error) {
-	salt = make([]byte, saltLen)
+	salt = make([]byte, SaltLen)
 	_, err = rand.Read(salt)
 	if err != nil {
 		return
