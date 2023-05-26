@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/niktheblak/passwordhash/pkg/scrypt"
 	"github.com/spf13/cobra"
@@ -17,7 +16,7 @@ var scryptCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		var password string
 		if len(args) == 0 {
-			if _, err := fmt.Fscan(os.Stdin, &password); err != nil {
+			if _, err := fmt.Fscan(cmd.InOrStdin(), &password); err != nil {
 				log.Fatal(err)
 			}
 		} else {
@@ -27,6 +26,6 @@ var scryptCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(string(hash))
+		cmd.Println(string(hash))
 	},
 }
