@@ -11,14 +11,14 @@ import (
 var testPassword = []byte("str0ng_p4ssw0rd")
 
 func TestPrefix(t *testing.T) {
-	hash, err := GenerateFromPassword(testPassword)
+	hash, err := hashAndEncode(testPassword)
 	require.NoError(t, err)
 	assert.True(t, bytes.HasPrefix(hash, HashPrefix))
 }
 
 func BenchmarkGenerateFromPassword(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_, err := GenerateFromPassword(testPassword)
+		_, err := hashAndEncode(testPassword)
 		require.NoError(b, err)
 	}
 }
@@ -39,7 +39,7 @@ func TestNilInput(t *testing.T) {
 }
 
 func TestCompareHashAndPassword(t *testing.T) {
-	hash, err := GenerateFromPassword(testPassword)
+	hash, err := hashAndEncode(testPassword)
 	t.Log(string(hash))
 	require.NoError(t, err)
 	err = CompareHashAndPassword(hash, testPassword)
@@ -49,7 +49,7 @@ func TestCompareHashAndPassword(t *testing.T) {
 }
 
 func BenchmarkCompareHashAndPassword(b *testing.B) {
-	hash, err := GenerateFromPassword(testPassword)
+	hash, err := hashAndEncode(testPassword)
 	require.NoError(b, err)
 	for i := 0; i < b.N; i++ {
 		err = CompareHashAndPassword(hash, testPassword)

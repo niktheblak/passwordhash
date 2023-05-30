@@ -6,14 +6,13 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/niktheblak/passwordhash/pkg/hasher/bcrypt"
-	"github.com/niktheblak/passwordhash/pkg/hasher/salted"
+	"github.com/niktheblak/passwordhash/pkg/hasher/argon2"
 )
 
-var bcryptCmd = &cobra.Command{
-	Use:   "bcrypt [input data]",
-	Short: "Prints bcrypt hash of the input data",
-	Long:  `Prints bcrypt hash of the input data provided as the command line argument or STDIN if no command line arguments are specified.`,
+var argon2Cmd = &cobra.Command{
+	Use:   "argon2 [input data]",
+	Short: "Prints argon2 hash of the input data",
+	Long:  `Prints argon2 hash of the input data provided as the command line argument or STDIN if no command line arguments are specified.`,
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var password string
@@ -27,8 +26,8 @@ var bcryptCmd = &cobra.Command{
 		if err := ensureSalt(); err != nil {
 			return err
 		}
-		sh := salted.Salted(new(bcrypt.Bcrypt), salt)
-		hash, err := sh.Hash([]byte(password))
+		a := new(argon2.Argon2)
+		hash, err := a.HashWithSalt([]byte(password), salt)
 		if err != nil {
 			return err
 		}
@@ -37,5 +36,5 @@ var bcryptCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(bcryptCmd)
+	rootCmd.AddCommand(argon2Cmd)
 }
