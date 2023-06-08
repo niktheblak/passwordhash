@@ -4,6 +4,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var (
+	HashPrefix = []byte{'$', '1', 'b'}
+)
+
 type Bcrypt struct {
 }
 

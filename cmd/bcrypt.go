@@ -32,7 +32,7 @@ var bcryptCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		return printToConsole(cmd, nil, hash, salt)
+		return printToConsole(cmd, bcrypt.HashPrefix, hash, salt)
 	},
 }
 
