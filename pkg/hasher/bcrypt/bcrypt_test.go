@@ -14,49 +14,56 @@ var (
 )
 
 func TestPrefix(t *testing.T) {
-	hash, err := GenerateFromPassword(testPassword)
+	hasher := new(Bcrypt)
+	hash, err := hasher.Hash(testPassword)
 	require.NoError(t, err)
 	t.Log(string(hash))
 	assert.True(t, bytes.HasPrefix(hash, prefix))
 }
 
 func BenchmarkGenerateFromPassword(b *testing.B) {
+	hasher := new(Bcrypt)
 	for i := 0; i < b.N; i++ {
-		_, err := GenerateFromPassword(testPassword)
+		_, err := hasher.Hash(testPassword)
 		require.NoError(b, err)
 	}
 }
 
 func TestInvalidPrefix(t *testing.T) {
-	err := CompareHashAndPassword([]byte("$1sababababababababababa"), testPassword)
+	hasher := new(Bcrypt)
+	err := hasher.Compare([]byte("$1sababababababababababa"), testPassword)
 	assert.EqualError(t, err, "crypto/bcrypt: hashedSecret too short to be a bcrypted password")
 }
 
 func TestTooShortHash(t *testing.T) {
-	err := CompareHashAndPassword([]byte("$2aab"), testPassword)
+	hasher := new(Bcrypt)
+	err := hasher.Compare([]byte("$2aab"), testPassword)
 	assert.EqualError(t, err, "crypto/bcrypt: hashedSecret too short to be a bcrypted password")
 }
 
 func TestNilInput(t *testing.T) {
-	err := CompareHashAndPassword(nil, testPassword)
+	hasher := new(Bcrypt)
+	err := hasher.Compare(nil, testPassword)
 	assert.Error(t, err)
 }
 
 func TestCompareHashAndPassword(t *testing.T) {
-	hash, err := GenerateFromPassword(testPassword)
+	hasher := new(Bcrypt)
+	hash, err := hasher.Hash(testPassword)
 	t.Log(string(hash))
 	require.NoError(t, err)
-	err = CompareHashAndPassword(hash, testPassword)
+	err = hasher.Compare(hash, testPassword)
 	assert.NoError(t, err, "Password did not match")
-	err = CompareHashAndPassword(hash, []byte("wrong password"))
+	err = hasher.Compare(hash, []byte("wrong password"))
 	assert.EqualError(t, err, "crypto/bcrypt: hashedPassword is not the hash of the given password")
 }
 
 func BenchmarkCompareHashAndPassword(b *testing.B) {
-	hash, err := GenerateFromPassword(testPassword)
+	hasher := new(Bcrypt)
+	hash, err := hasher.Hash(testPassword)
 	require.NoError(b, err)
 	for i := 0; i < b.N; i++ {
-		err = CompareHashAndPassword(hash, testPassword)
+		err = hasher.Compare(hash, testPassword)
 		require.NoError(b, err)
 	}
 }

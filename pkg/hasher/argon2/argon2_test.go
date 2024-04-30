@@ -15,49 +15,56 @@ var (
 )
 
 func TestPrefix(t *testing.T) {
-	hash, err := GenerateFromPassword(testPassword, testSalt)
+	hasher := new(Argon2)
+	hash, err := hasher.HashWithSalt(testPassword, testSalt)
 	require.NoError(t, err)
 	t.Log(string(hash))
 	assert.True(t, bytes.HasPrefix(hash, prefix))
 }
 
 func BenchmarkGenerateFromPassword(b *testing.B) {
+	hasher := new(Argon2)
 	for i := 0; i < b.N; i++ {
-		_, err := GenerateFromPassword(testPassword, testSalt)
+		_, err := hasher.HashWithSalt(testPassword, testSalt)
 		require.NoError(b, err)
 	}
 }
 
 func TestInvalidPrefix(t *testing.T) {
-	err := CompareHashAndPassword([]byte("$1sababababababababababa"), testPassword, testSalt)
-	assert.EqualError(t, err, "crypto/bcrypt: hashedSecret too short to be a bcrypted password")
+	hasher := new(Argon2)
+	err := hasher.CompareSalted([]byte("$1sababababababababababa"), testPassword, testSalt)
+	assert.EqualError(t, err, "password does not match hash")
 }
 
 func TestTooShortHash(t *testing.T) {
-	err := CompareHashAndPassword([]byte("$2aab"), testPassword, testSalt)
-	assert.EqualError(t, err, "crypto/bcrypt: hashedSecret too short to be a bcrypted password")
+	hasher := new(Argon2)
+	err := hasher.CompareSalted([]byte("$2aab"), testPassword, testSalt)
+	assert.EqualError(t, err, "password does not match hash")
 }
 
 func TestNilInput(t *testing.T) {
-	err := CompareHashAndPassword(nil, testPassword, testSalt)
+	hasher := new(Argon2)
+	err := hasher.CompareSalted(nil, testPassword, testSalt)
 	assert.Error(t, err)
 }
 
 func TestCompareHashAndPassword(t *testing.T) {
-	hash, err := GenerateFromPassword(testPassword, testSalt)
+	hasher := new(Argon2)
+	hash, err := hasher.HashWithSalt(testPassword, testSalt)
 	t.Log(string(hash))
 	require.NoError(t, err)
-	err = CompareHashAndPassword(hash, testPassword, testSalt)
+	err = hasher.CompareSalted(hash, testPassword, testSalt)
 	assert.NoError(t, err, "Password did not match")
-	err = CompareHashAndPassword(hash, []byte("wrong password"), testSalt)
-	assert.EqualError(t, err, "crypto/bcrypt: hashedPassword is not the hash of the given password")
+	err = hasher.CompareSalted(hash, []byte("wrong password"), testSalt)
+	assert.EqualError(t, err, "password does not match hash")
 }
 
 func BenchmarkCompareHashAndPassword(b *testing.B) {
-	hash, err := GenerateFromPassword(testPassword, testSalt)
+	hasher := new(Argon2)
+	hash, err := hasher.HashWithSalt(testPassword, testSalt)
 	require.NoError(b, err)
 	for i := 0; i < b.N; i++ {
-		err = CompareHashAndPassword(hash, testPassword, testSalt)
+		err = hasher.CompareSalted(hash, testPassword, testSalt)
 		require.NoError(b, err)
 	}
 }
