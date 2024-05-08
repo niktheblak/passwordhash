@@ -27,7 +27,7 @@ var bcryptCmd = &cobra.Command{
 		if err := ensureSalt(); err != nil {
 			return err
 		}
-		sh := salted.Salted(new(bcrypt.Bcrypt), salt)
+		sh := salted.Wrap(new(bcrypt.Bcrypt), salt)
 		hash, err := sh.Hash([]byte(password))
 		if err != nil {
 			return err

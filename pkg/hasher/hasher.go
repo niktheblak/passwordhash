@@ -15,3 +15,8 @@ type Hasher interface {
 	Hash(data []byte) (hash []byte, err error)
 	Compare(passwordHash, password []byte) error
 }
+
+type SaltedHasher interface {
+	HashWithSalt(password, salt []byte) ([]byte, error)
+	CompareSalted(passwordHash, password, salt []byte) error
+}

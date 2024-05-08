@@ -52,7 +52,7 @@ func (sh *Hasher) Compare(passwordHash, password []byte) error {
 	return sh.CompareSalted(givenHash, password, salt)
 }
 
-func Salted(h hasher.Hasher, salt []byte) *Hasher {
+func Wrap(h hasher.Hasher, salt []byte) *Hasher {
 	return &Hasher{
 		Hasher: h,
 		Salt:   salt,
