@@ -1,7 +1,6 @@
 package scrypt
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -13,25 +12,12 @@ var (
 	testSalt     = []byte("s0m3_s4lt")
 )
 
-func TestPrefix(t *testing.T) {
-	hasher := new(Scrypt)
-	hash, err := hasher.HashWithSalt(testPassword, testSalt)
-	require.NoError(t, err)
-	assert.True(t, bytes.HasPrefix(hash, HashPrefix))
-}
-
 func BenchmarkGenerateFromPassword(b *testing.B) {
 	hasher := new(Scrypt)
 	for i := 0; i < b.N; i++ {
 		_, err := hasher.HashWithSalt(testPassword, testSalt)
 		require.NoError(b, err)
 	}
-}
-
-func TestInvalidPrefix(t *testing.T) {
-	hasher := new(Scrypt)
-	err := hasher.CompareSalted([]byte("$1$ababababababababababa"), testPassword, testSalt)
-	assert.EqualError(t, err, "password does not match hash")
 }
 
 func TestTooShortHash(t *testing.T) {

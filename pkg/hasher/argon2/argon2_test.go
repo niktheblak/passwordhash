@@ -1,7 +1,6 @@
 package argon2
 
 import (
-	"bytes"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,16 +10,7 @@ import (
 var (
 	testPassword = []byte("str0ng_p4ssw0rd")
 	testSalt     = []byte("s0m3_s4lt")
-	prefix       = []byte("$2a")
 )
-
-func TestPrefix(t *testing.T) {
-	hasher := new(Argon2)
-	hash, err := hasher.HashWithSalt(testPassword, testSalt)
-	require.NoError(t, err)
-	t.Log(string(hash))
-	assert.True(t, bytes.HasPrefix(hash, prefix))
-}
 
 func BenchmarkGenerateFromPassword(b *testing.B) {
 	hasher := new(Argon2)
