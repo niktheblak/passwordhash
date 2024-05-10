@@ -20,7 +20,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.PersistentFlags().BoolVarP(&encode, "encode", "e", true, "base64 encode the hash")
+	rootCmd.PersistentFlags().BoolVarP(&encode, "encode", "e", false, "base64 encode the hash")
 	rootCmd.PersistentFlags().BytesHexVarP(&salt, "salt", "s", nil, "salt (optional)")
 }
 
