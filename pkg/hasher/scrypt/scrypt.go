@@ -2,7 +2,6 @@ package scrypt
 
 import (
 	"crypto/subtle"
-	"encoding/base64"
 
 	stdscrypt "golang.org/x/crypto/scrypt"
 
@@ -14,11 +13,9 @@ const (
 	DefaultR      = 8
 	DefaultP      = 1
 	DefaultKeyLen = 32
-	SaltLen       = 8
 )
 
 var (
-	Encoding   = base64.RawURLEncoding
 	HashPrefix = []byte{'$', '1', 's'}
 )
 
