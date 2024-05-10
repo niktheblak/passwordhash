@@ -3,6 +3,8 @@ package cmd
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"io"
+	"os"
 
 	"github.com/spf13/cobra"
 
@@ -26,6 +28,15 @@ func init() {
 
 func Execute() error {
 	return rootCmd.Execute()
+}
+
+func readFromStdin(args []string) (data []byte, err error) {
+	if len(args) == 1 {
+		data = []byte(args[0])
+		return
+	}
+	data, err = io.ReadAll(os.Stdin)
+	return
 }
 
 func printToConsole(cmd *cobra.Command, prefix, hash, salt []byte) error {
